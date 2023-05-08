@@ -24,6 +24,7 @@ public class TweetController {
 
 
     private final RestTemplate rt;
+    private final String url = "http://localhost:8080/slow-tweets";
 
     public TweetController(RestTemplate rt) {
         this.rt = rt;
@@ -40,9 +41,9 @@ public class TweetController {
     @GetMapping("/tweets-blocking")
     public List<Tweets> getBlockingTweets() throws InterruptedException {
         log.info("Start Blocking Controller");
-        final String uri = "http://localhost:8080/slow-tweets";
- //       RestTemplate rt = new RestTemplate();
-        ResponseEntity<List<Tweets>> response = rt.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<Tweets>>() {
+       // final String uri = "http://localhost:8080/slow-tweets";
+        //       RestTemplate rt = new RestTemplate();
+        ResponseEntity<List<Tweets>> response = rt.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Tweets>>() {
         });
         List<Tweets> result = response.getBody();
         result.forEach(tweets -> log.info(tweets.toString()));
@@ -54,7 +55,7 @@ public class TweetController {
     public Flux<Tweets> getNonBlockingTweets() {
         log.info("Start Non-Blocking Api");
         Flux<Tweets> tweetsFlux = WebClient.create().get()
-                .uri("http://localhost:8080/slow-tweets")
+                .uri(url)
                 .retrieve().
                 bodyToFlux(Tweets.class);
         tweetsFlux.subscribe(tweets -> log.info(tweets.toString()));
