@@ -1,8 +1,10 @@
-package com.example.webfluxvsresttemplate;
+package com.example.webfluxvsresttemplate.controller;
 
 
+import com.example.webfluxvsresttemplate.entity.Tweets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,13 @@ public class TweetController {
 
     Logger log = LoggerFactory.getLogger(TweetController.class);
 
+
+    private final RestTemplate rt;
+
+    public TweetController(RestTemplate rt) {
+        this.rt = rt;
+    }
+
     @GetMapping("/slow-tweets")
     private List<Tweets> getAllTweets() throws InterruptedException {
         Thread.sleep(2000l);
@@ -32,7 +41,7 @@ public class TweetController {
     public List<Tweets> getBlockingTweets() throws InterruptedException {
         log.info("Start Blocking Controller");
         final String uri = "http://localhost:8080/slow-tweets";
-        RestTemplate rt = new RestTemplate();
+ //       RestTemplate rt = new RestTemplate();
         ResponseEntity<List<Tweets>> response = rt.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<Tweets>>() {
         });
         List<Tweets> result = response.getBody();

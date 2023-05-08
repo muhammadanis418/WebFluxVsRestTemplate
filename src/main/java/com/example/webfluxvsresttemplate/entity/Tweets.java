@@ -1,4 +1,4 @@
-package com.example.webfluxvsresttemplate;
+package com.example.webfluxvsresttemplate.entity;
 
 public class Tweets {
     String text;
